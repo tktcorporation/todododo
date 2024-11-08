@@ -5,5 +5,5 @@ import { netlifyPlugin } from "@netlify/remix-adapter/plugin";
 import { remixPWA } from '@remix-pwa/dev'
 
 export default defineConfig({
-  plugins: [remix(), netlifyPlugin(), tsconfigPaths(), remixPWA()],
+  plugins: [remix(), remixPWA(), netlifyPlugin(), tsconfigPaths()],
 });
