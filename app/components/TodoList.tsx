@@ -44,11 +44,7 @@ export default function TodoList({ todos, language }: TodoListProps) {
   };
 
   if (todos.length === 0) {
-    return (
-      <p className="text-center text-gray-500 dark:text-gray-400">
-        {t("noTasks")}
-      </p>
-    );
+    return null;
   }
 
   return (
@@ -57,17 +53,19 @@ export default function TodoList({ todos, language }: TodoListProps) {
         <ContextMenu key={todo.id}>
           <ContextMenuTrigger>
             <li 
-              className={`group flex items-center justify-between rounded-md border border-gray-200 p-3 dark:border-gray-700 transition-all duration-1000 ${
-                todo.completed ? 'bg-gray-50 dark:bg-gray-800/50' : ''
+              className={`group flex items-center justify-between rounded-md p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50 ${
+                todo.completed ? 'text-gray-500 dark:text-gray-400' : ''
               }`}
             >
               <div className="flex flex-1 items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => toggleTodoMutation.mutate(todo.id)}
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
-                />
+                <div className="touch-manipulation">
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={() => toggleTodoMutation.mutate(todo.id)}
+                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                  />
+                </div>
                 {editingId === todo.id ? (
                   <input
                     ref={editInputRef}
@@ -82,12 +80,12 @@ export default function TodoList({ todos, language }: TodoListProps) {
                         setEditingId(null);
                       }
                     }}
-                    className="flex-1 rounded border-gray-300 px-2 py-1 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    className="flex-1 rounded border-gray-300 px-3 py-2 text-base text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
                 ) : (
                   <span
                     onDoubleClick={() => handleDoubleClick(todo)}
-                    className={`flex-1 cursor-text select-none text-gray-900 dark:text-gray-100 ${
+                    className={`flex-1 cursor-text select-none text-base ${
                       todo.completed ? "line-through opacity-50" : ""
                     }`}
                   >
@@ -99,7 +97,7 @@ export default function TodoList({ todos, language }: TodoListProps) {
           </ContextMenuTrigger>
           <ContextMenuContent>
             <ContextMenuItem
-              className="text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
+              className="text-base text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
               onSelect={() => deleteTodoMutation.mutate(todo.id)}
             >
               {t("delete")}

@@ -8,7 +8,7 @@ export const translations = {
   en: {
     addTodo: "Add",
     addTodoPlaceholder: "Enter a new task...",
-    noTasks: "No tasks. Add a new task to get started.",
+    noTasks: "No tasks",
     delete: "Delete",
     settings: "Settings",
     showCompletedTasks: "Show completed tasks",
@@ -17,11 +17,12 @@ export const translations = {
     pasteFromClipboard: "Paste image from clipboard (Ctrl+V)",
     uploadError: "Only image files can be uploaded.",
     clipboardError: "Failed to read from clipboard:",
+    dragToMove: "Drag to move",
   },
   ja: {
     addTodo: "追加",
     addTodoPlaceholder: "新しいタスクを入力...",
-    noTasks: "タスクがありません。新しいタスクを追加してください。",
+    noTasks: "タスクなし",
     delete: "削除",
     settings: "設定",
     showCompletedTasks: "完了したタスクを表示",
@@ -30,6 +31,7 @@ export const translations = {
     pasteFromClipboard: "クリップボードから画像を貼り付け (Ctrl+V)",
     uploadError: "画像ファイルのみアップロードできます。",
     clipboardError: "クリップボードからの読み込みに失敗しました:",
+    dragToMove: "ドラッグして移動",
   },
 } as const;
 

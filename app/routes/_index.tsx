@@ -5,6 +5,7 @@ import Settings from "~/components/Settings";
 import { loadState, savePosition, saveShowCompleted, saveBackgroundImage, saveLanguage } from "~/lib/storage";
 import type { Language } from "~/lib/i18n";
 import { DEFAULT_LANGUAGE } from "~/lib/i18n";
+import { useClipboardImage } from "~/hooks/useClipboardImage";
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,6 +22,7 @@ export default function Index() {
   const [showCompleted, setShowCompleted] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState("");
   const [language, setLanguage] = useState<Language>(DEFAULT_LANGUAGE);
+  const { handlePaste } = useClipboardImage();
 
   useEffect(() => {
     const state = loadState();
@@ -29,6 +31,20 @@ export default function Index() {
     setBackgroundImage(state.backgroundImage);
     setLanguage(state.language);
   }, []);
+
+  useEffect(() => {
+    const handleGlobalPaste = (e: ClipboardEvent) => {
+      if (!backgroundImage) {
+        handlePaste((imageUrl) => {
+          setBackgroundImage(imageUrl);
+          saveBackgroundImage(imageUrl);
+        });
+      }
+    };
+
+    document.addEventListener('paste', handleGlobalPaste);
+    return () => document.removeEventListener('paste', handleGlobalPaste);
+  }, [backgroundImage, handlePaste]);
 
   const handlePositionChange = (newPosition: { x: number; y: number }) => {
     setPosition(newPosition);
@@ -59,6 +75,15 @@ export default function Index() {
         backgroundPosition: 'center',
       } : undefined}
     >
+      {!backgroundImage && (
+        <div className="absolute inset-0 flex items-center justify-center text-center text-gray-400 dark:text-gray-600">
+          <p className="max-w-xs text-base">
+            {language === 'ja' ? 
+              '画像をペーストして背景を設定 (Ctrl+V)' : 
+              'Paste an image to set background (Ctrl+V)'}
+          </p>
+        </div>
+      )}
       <TodoContainer
         position={position}
         onPositionChange={handlePositionChange}

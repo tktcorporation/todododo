@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { GripVertical } from "lucide-react";
 import type { Todo } from "~/types";
 import TodoList from "./TodoList";
 import TodoForm from "./TodoForm";
@@ -60,32 +59,35 @@ export default function TodoContainer({
       }}
       className={`w-full max-w-md px-4 ${className}`}
     >
-      <div className="relative rounded-lg bg-white/90 p-4 shadow-lg backdrop-blur-sm dark:bg-gray-800/90">
-        <div className="absolute -top-2 left-0 right-0 flex items-center justify-center">
-          <div className="flex items-center gap-1 rounded-full border border-gray-200 bg-white/90 p-0.5 shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/90">
-            <div
-              onMouseDown={handleMouseDown}
-              className="cursor-grab rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-              title={t("dragToMove")}
-            >
-              <GripVertical className="h-3 w-3 text-gray-400" />
-            </div>
-            {children}
-          </div>
+      <div className="relative overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-sm transition-all dark:bg-gray-800/90">
+        <button
+          onTouchStart={handleMouseDown}
+          onMouseDown={handleMouseDown}
+          className="touch-manipulation mt-1.5 flex h-3 w-full cursor-grab items-center justify-center transition-colors active:cursor-grabbing"
+          title={t("dragToMove")}
+        >
+          <div className="h-1 w-36 rounded-full bg-gray-500/50 dark:bg-gray-400/50 active:bg-gray-300/50 dark:bg-gray-700/50 dark:active:bg-gray-500/50"/>
+        </button>
+
+        <div className="flex items-center justify-end p-2">
+          {children}
         </div>
 
-        <div className="mt-4">
-          <TodoForm
-            value={newTodo}
-            onChange={setNewTodo}
-            onSubmit={handleAddTodo}
-            language={language}
-          />
-
-          <TodoList
-            todos={visibleTodos}
-            language={language}
-          />
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="p-3">
+            <TodoForm
+              value={newTodo}
+              onChange={setNewTodo}
+              onSubmit={handleAddTodo}
+              language={language}
+            />
+          </div>
+          <div className="p-3">
+            <TodoList
+              todos={visibleTodos}
+              language={language}
+            />
+          </div>
         </div>
       </div>
     </div>

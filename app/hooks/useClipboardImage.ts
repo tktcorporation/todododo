@@ -20,7 +20,7 @@ export function useClipboardImage() {
         }
       }
     } catch (err) {
-      console.error("クリップボードからの読み込みに失敗しました:", err);
+      console.error("Failed to read from clipboard:", err);
     }
   }, []);
 
