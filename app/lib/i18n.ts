@@ -7,7 +7,7 @@ export const DEFAULT_LANGUAGE: Language = "en";
 export const translations = {
   en: {
     addTodo: "Add",
-    addTodoPlaceholder: "Enter a new task...",
+    addTodoPlaceholder: "Enter a new task... (paste multiple lines to add multiple tasks)",
     noTasks: "No tasks",
     delete: "Delete",
     settings: "Settings",
@@ -18,10 +18,13 @@ export const translations = {
     uploadError: "Only image files can be uploaded.",
     clipboardError: "Failed to read from clipboard:",
     dragToMove: "Drag to move",
+    confirmTodos: "Confirm Tasks",
+    cancel: "Cancel",
+    addTodos: "Add Tasks",
   },
   ja: {
     addTodo: "追加",
-    addTodoPlaceholder: "新しいタスクを入力...",
+    addTodoPlaceholder: "新しいタスクを入力... (複数行をペーストで一括追加)",
     noTasks: "タスクなし",
     delete: "削除",
     settings: "設定",
@@ -32,6 +35,9 @@ export const translations = {
     uploadError: "画像ファイルのみアップロードできます。",
     clipboardError: "クリップボードからの読み込みに失敗しました:",
     dragToMove: "ドラッグして移動",
+    confirmTodos: "タスクの確認",
+    cancel: "キャンセル",
+    addTodos: "タスクを追加",
   },
 } as const;
 

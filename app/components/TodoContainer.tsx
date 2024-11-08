@@ -48,6 +48,13 @@ export default function TodoContainer({
     setNewTodo("");
   };
 
+  const handleAddMultipleTodos = (newTodos: Todo[]) => {
+    newTodos.forEach(todo => {
+      addTodoMutation.mutate(todo);
+    });
+    setNewTodo("");
+  };
+
   const visibleTodos = todos.filter(todo => !todo.completed || showCompleted);
 
   return (
@@ -87,6 +94,7 @@ export default function TodoContainer({
               value={newTodo}
               onChange={setNewTodo}
               onSubmit={handleAddTodo}
+              onMultilineSubmit={handleAddMultipleTodos}
               language={language}
               colors={colors}
             />
