@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ManifestLink } from "@remix-pwa/sw";
 
 import "./tailwind.css";
 
@@ -40,6 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <ManifestLink />
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
