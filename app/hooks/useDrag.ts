@@ -5,26 +5,35 @@ type UseDragProps = {
   initialPosition: { x: number; y: number };
 };
 
-export function useDrag({ onDrag, initialPosition }: UseDragProps) {
+export default function useDrag({ onDrag, initialPosition }: UseDragProps) {
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return; // Only left click
+  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault(); // Prevent scrolling on touch devices
     isDraggingRef.current = true;
+    
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    
     dragStartRef.current = {
-      x: e.clientX - (window.innerWidth * initialPosition.x) / 100,
-      y: e.clientY - (window.innerHeight * initialPosition.y) / 100,
+      x: clientX - (window.innerWidth * initialPosition.x) / 100,
+      y: clientY - (window.innerHeight * initialPosition.y) / 100,
     };
+    
     document.body.style.cursor = "grab";
+    document.body.style.userSelect = "none"; // Prevent text selection while dragging
   };
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (e: MouseEvent | TouchEvent) => {
       if (!isDraggingRef.current) return;
 
-      const newX = ((e.clientX - dragStartRef.current.x) / window.innerWidth) * 100;
-      const newY = ((e.clientY - dragStartRef.current.y) / window.innerHeight) * 100;
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+      const newX = ((clientX - dragStartRef.current.x) / window.innerWidth) * 100;
+      const newY = ((clientY - dragStartRef.current.y) / window.innerHeight) * 100;
 
       onDrag({
         x: Math.max(0, Math.min(100, newX)),
@@ -32,17 +41,25 @@ export function useDrag({ onDrag, initialPosition }: UseDragProps) {
       });
     };
 
-    const handleMouseUp = () => {
+    const handleEnd = () => {
       isDraggingRef.current = false;
       document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    // Add both mouse and touch event listeners
+    document.addEventListener("mousemove", handleMove);
+    document.addEventListener("mouseup", handleEnd);
+    document.addEventListener("touchmove", handleMove, { passive: false });
+    document.addEventListener("touchend", handleEnd);
+    document.addEventListener("touchcancel", handleEnd);
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseup", handleEnd);
+      document.removeEventListener("touchmove", handleMove);
+      document.removeEventListener("touchend", handleEnd);
+      document.removeEventListener("touchcancel", handleEnd);
     };
   }, [onDrag]);
 

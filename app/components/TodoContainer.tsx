@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import type { Todo } from "~/types";
 import TodoList from "./TodoList";
 import TodoForm from "./TodoForm";
-import { useDrag } from "~/hooks/useDrag";
+import useDrag from "~/hooks/useDrag";
 import { createTodo } from "~/lib/storage";
 import { useTranslation } from "~/lib/i18n";
 import type { Language } from "~/lib/i18n";
@@ -68,14 +68,14 @@ export default function TodoContainer({
           color: colors.text || 'inherit'
         }}
       >
-        <button
+        <div
           onTouchStart={handleMouseDown}
           onMouseDown={handleMouseDown}
-          className="touch-manipulation mt-1.5 flex h-3 w-full cursor-grab items-center justify-center transition-colors active:cursor-grabbing"
+          className="touch-manipulation mt-1.5 flex h-6 w-full cursor-grab items-center justify-center transition-colors active:cursor-grabbing"
           title={t("dragToMove")}
         >
           <div className="h-1 w-36 rounded-full bg-gray-500/50 dark:bg-gray-400/50 active:bg-gray-300/50 dark:bg-gray-700/50 dark:active:bg-gray-500/50"/>
-        </button>
+        </div>
 
         <div className="flex items-center justify-end p-2">
           {children}
