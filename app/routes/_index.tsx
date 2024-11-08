@@ -110,7 +110,7 @@ export default function Index() {
 
   return (
     <div 
-      className="relative min-h-screen bg-gray-50 dark:bg-gray-900 transition-all duration-300"
+      className="fixed inset-0 overflow-hidden bg-gray-50 dark:bg-gray-900 transition-all duration-300"
       style={backgroundImage ? {
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',

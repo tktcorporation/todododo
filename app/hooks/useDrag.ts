@@ -10,7 +10,13 @@ export default function useDrag({ onDrag, initialPosition }: UseDragProps) {
   const dragStartRef = useRef({ x: 0, y: 0 });
 
   const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault(); // Prevent scrolling on touch devices
+    e.stopPropagation();
+    
+    // Prevent default only for touch events to avoid text selection issues
+    if ('touches' in e) {
+      e.preventDefault();
+    }
+    
     isDraggingRef.current = true;
     
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
@@ -22,12 +28,16 @@ export default function useDrag({ onDrag, initialPosition }: UseDragProps) {
     };
     
     document.body.style.cursor = "grab";
-    document.body.style.userSelect = "none"; // Prevent text selection while dragging
+    document.body.style.userSelect = "none";
+    document.body.style.overflow = "hidden"; // Prevent scrolling
   };
 
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (!isDraggingRef.current) return;
+
+      // Prevent default to stop scrolling
+      e.preventDefault();
 
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
@@ -42,22 +52,25 @@ export default function useDrag({ onDrag, initialPosition }: UseDragProps) {
     };
 
     const handleEnd = () => {
+      if (!isDraggingRef.current) return;
+      
       isDraggingRef.current = false;
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
+      document.body.style.overflow = ""; // Restore scrolling
     };
 
-    // Add both mouse and touch event listeners
+    // Add touch event listeners with passive: false to allow preventDefault
+    document.addEventListener("touchmove", handleMove, { passive: false });
     document.addEventListener("mousemove", handleMove);
     document.addEventListener("mouseup", handleEnd);
-    document.addEventListener("touchmove", handleMove, { passive: false });
     document.addEventListener("touchend", handleEnd);
     document.addEventListener("touchcancel", handleEnd);
 
     return () => {
+      document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleEnd);
-      document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("touchend", handleEnd);
       document.removeEventListener("touchcancel", handleEnd);
     };
