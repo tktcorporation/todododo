@@ -8,15 +8,18 @@ type TodoFormProps = {
   onChange: (value: string) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   language: Language;
+  colors: { primary: string; text: string; background: string };
 };
 
-export default function TodoForm({ value, onChange, onSubmit, language }: TodoFormProps) {
+export default function TodoForm({ value, onChange, onSubmit, language, colors }: TodoFormProps) {
   const { t } = useTranslation(language);
   const [isFocused, setIsFocused] = useState(false);
 
   const handleMouseDown = (e: MouseEvent<HTMLFormElement>) => {
     e.stopPropagation();
   };
+
+  const isDark = colors.text === 'rgb(255, 255, 255)';
 
   return (
     <form 
@@ -31,19 +34,33 @@ export default function TodoForm({ value, onChange, onSubmit, language }: TodoFo
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder={t("addTodoPlaceholder")}
+        style={{
+          '--input-focus-color': colors.primary,
+          '--input-text-color': colors.text,
+          '--input-bg-color': isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+          '--input-hover-bg-color': isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
+          '--input-focus-bg-color': isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.9)',
+          '--input-placeholder-color': isDark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.4)',
+        } as React.CSSProperties}
         className={`flex-1 rounded-md px-3 py-2 text-base transition-all duration-200 ${
           isFocused
-            ? "border border-blue-500 bg-white text-gray-900 placeholder-gray-400 ring-1 ring-blue-500 dark:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-            : "border border-transparent bg-transparent text-gray-500 placeholder-gray-400/50 hover:bg-gray-50/50 dark:text-gray-400 dark:placeholder-gray-600 dark:hover:bg-gray-800/30"
+            ? "border border-[var(--input-focus-color)] bg-[var(--input-focus-bg-color)] text-[var(--input-text-color)] placeholder-[var(--input-placeholder-color)] ring-1 ring-[var(--input-focus-color)]"
+            : "border border-transparent bg-[var(--input-bg-color)] text-[var(--input-text-color)] placeholder-[var(--input-placeholder-color)] hover:bg-[var(--input-hover-bg-color)]"
         }`}
       />
       <button
         type="submit"
         disabled={!value.trim()}
+        style={{
+          '--button-bg': isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+          '--button-hover-bg': isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
+          '--button-focus-bg': colors.primary,
+          '--button-text': colors.text,
+        } as React.CSSProperties}
         className={`touch-manipulation rounded-md px-4 py-2 text-base font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${
           isFocused
-            ? "bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:bg-blue-800 dark:hover:bg-blue-800"
-            : "bg-gray-100/50 text-gray-400 hover:bg-gray-100 dark:bg-gray-800/50 dark:text-gray-500 dark:hover:bg-gray-800"
+            ? "bg-[var(--button-focus-bg)] text-[var(--button-text)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--button-focus-bg)] focus:ring-offset-2 active:opacity-100"
+            : "bg-[var(--button-bg)] text-[var(--button-text)] hover:bg-[var(--button-hover-bg)]"
         } ${isFocused || value ? "opacity-100" : "opacity-0"}`}
       >
         {t("addTodo")}

@@ -14,6 +14,7 @@ type TodoContainerProps = {
   onPositionChange: (position: { x: number; y: number }) => void;
   showCompleted: boolean;
   language: Language;
+  colors: { primary: string; text: string; background: string };
   children?: React.ReactNode;
 };
 
@@ -23,6 +24,7 @@ export default function TodoContainer({
   onPositionChange,
   showCompleted,
   language,
+  colors,
   children 
 }: TodoContainerProps) {
   const [newTodo, setNewTodo] = useState("");
@@ -59,7 +61,13 @@ export default function TodoContainer({
       }}
       className={`w-full max-w-md px-4 ${className}`}
     >
-      <div className="relative overflow-hidden rounded-lg bg-white/90 shadow-lg backdrop-blur-sm transition-all dark:bg-gray-800/90">
+      <div 
+        className="relative overflow-hidden rounded-lg shadow-lg backdrop-blur-sm transition-all"
+        style={{ 
+          backgroundColor: colors.background || 'rgba(255, 255, 255, 0.9)',
+          color: colors.text || 'inherit'
+        }}
+      >
         <button
           onTouchStart={handleMouseDown}
           onMouseDown={handleMouseDown}
@@ -73,19 +81,21 @@ export default function TodoContainer({
           {children}
         </div>
 
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="divide-y divide-gray-200/30">
           <div className="p-3">
             <TodoForm
               value={newTodo}
               onChange={setNewTodo}
               onSubmit={handleAddTodo}
               language={language}
+              colors={colors}
             />
           </div>
           <div className="p-3">
             <TodoList
               todos={visibleTodos}
               language={language}
+              colors={colors}
             />
           </div>
         </div>

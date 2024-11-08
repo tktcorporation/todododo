@@ -13,9 +13,10 @@ import type { Language } from "~/lib/i18n";
 type TodoListProps = {
   todos: Todo[];
   language: Language;
+  colors: { primary: string; text: string; background: string };
 };
 
-export default function TodoList({ todos, language }: TodoListProps) {
+export default function TodoList({ todos, language, colors }: TodoListProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const editInputRef = useRef<HTMLInputElement>(null);
@@ -53,9 +54,10 @@ export default function TodoList({ todos, language }: TodoListProps) {
         <ContextMenu key={todo.id}>
           <ContextMenuTrigger>
             <li 
-              className={`group flex items-center justify-between rounded-md p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50 ${
-                todo.completed ? 'text-gray-500 dark:text-gray-400' : ''
+              className={`group flex items-center justify-between rounded-md p-2 transition-colors hover:bg-black/5 ${
+                todo.completed ? 'opacity-50' : ''
               }`}
+              style={{ color: colors.text }}
             >
               <div className="flex flex-1 items-center gap-3">
                 <div className="touch-manipulation">
@@ -63,7 +65,8 @@ export default function TodoList({ todos, language }: TodoListProps) {
                     type="checkbox"
                     checked={todo.completed}
                     onChange={() => toggleTodoMutation.mutate(todo.id)}
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                    className="h-5 w-5 rounded border-gray-300 text-[var(--checkbox-color)] focus:ring-[var(--checkbox-color)]"
+                    style={{ '--checkbox-color': colors.primary } as React.CSSProperties}
                   />
                 </div>
                 {editingId === todo.id ? (
@@ -80,13 +83,17 @@ export default function TodoList({ todos, language }: TodoListProps) {
                         setEditingId(null);
                       }
                     }}
-                    className="flex-1 rounded border-gray-300 px-3 py-2 text-base text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    className="flex-1 rounded border-[var(--input-border)] bg-white/90 px-3 py-2 text-base focus:border-[var(--input-focus)] focus:ring-[var(--input-focus)]"
+                    style={{ 
+                      '--input-border': colors.text + '30',
+                      '--input-focus': colors.primary,
+                    } as React.CSSProperties}
                   />
                 ) : (
                   <span
                     onDoubleClick={() => handleDoubleClick(todo)}
                     className={`flex-1 cursor-text select-none text-base ${
-                      todo.completed ? "line-through opacity-50" : ""
+                      todo.completed ? "line-through" : ""
                     }`}
                   >
                     {todo.text}

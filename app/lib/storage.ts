@@ -46,7 +46,11 @@ function setItem<T>(key: string, value: T): void {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (err) {
+    if (err instanceof Error && err.name === "QuotaExceededError") {
+      throw new Error("Storage quota exceeded. Please try a smaller image.");
+    }
     console.error(`Failed to save ${key}:`, err);
+    throw err;
   }
 }
 
